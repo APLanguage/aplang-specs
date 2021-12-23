@@ -76,7 +76,8 @@ What is an expression? An expression is in this context a term, a identifier, a 
 
 ### Control Statements
 
-Some of the statements are actually also evaluable as expressions.
+All of this control statements works as expressions, the return type of break and return is the type of the receiver: as it breaks the execution, it will not return any value,
+therefor `val test = if(someBool) "return" else return` will work, and the type of test will be evaluated as String and the return will be ignored.
 
 #### if
   Syntax: `"if"  "(" expression  ")" expression ( "else" expression )?`
@@ -86,7 +87,7 @@ Some of the statements are actually also evaluable as expressions.
 #### break & label
 
   Label Syntax: `identifier ":" ( while | for | loop )`
-  Break Syntax: `"break"(+"@"+identifier)? expression?`
+  Break Syntax: `"break"(+"@"+IDENTIFIER)? expression?`
 
   The break stops the execution of the actual for/while/loop, if the loop is an expression and depending on the data type, this break can either return a single value out of the loop, stop the loop and append 1 additional last entry or just break it. Example:
 ```kotlin
@@ -116,21 +117,43 @@ fn findFriendAndDoSomething(users: List<User>, name: String) {
   // do something with foundFriend
 }
 ```
+As the break is an expression, it will be accepted in places in which expression are expected, the expression returns in it self nothing, because the execution of the particular place will not occur (Ex.: `methodCall(break test)`), so the type checker will expect the inferred break type to match the loop and not the call place.
 
 #### for-loop
-  Syntax: `"for" "(" identifier ( (":" | "as" | "as?") type )? "in" expression ")" expression`
+  Syntax: `"for" "(" IDENTIFIER ( (":" | "as" | "as?") type )? "in" expression ")" expression`
 
-  If there is a statement or an expression is controlled firstly if it's used as a statement, in which it will be parsed as a statement. However if the for is used as an expression, it depends on the returned type: if it's a collectible, it will be an expression, if it's a single type, it will be a statement. `( (":" | "as" | "as?") type )?` allows to specify a type if it cannot be inferred, `as` and `as?` will cast the element, while the `as?` is a safe cast, `as` will raise an Exception if it cannot be cast.
+  The for provides a way to iterate over an iterable.
+  `( (":" | "as" | "as?") type )?` allows to specify a type if it cannot be inferred, `as` and `as?` will cast the element, while the `as?` is a safe cast, `as` will raise an Exception if it cannot be cast.
+
+The for can return a value:
+
+- If the type needed is not a collectible, it will return T? which T (T? also possible) is the type provided in a break, otherwise it will return ALWAYS null.
+- If the type needed is a collectible, it will collect the return of the expression provided, if the collectible needs a not null, it will filter the values to be not null.
+- If the for is used as a statement, the `break` cannot accept any expression.
 
 #### while-loop
   Syntax: `"while" "(" expression ")" expression`
+
+The while loop provides a way to firstly loop with a condition, but also generating a collectible as long the loop still runs. It works exactly like the for, but instead of iterating, it tests the condition.
+
 #### loop
-  Syntax: `"loop" "{" expression* "}"`
+  Syntax: `"loop" expression`
+
+The equivalent of a `while(true) expression`.
+
 #### return
+
+  Syntax: `"return"(+"@"+IDENTIFIER)? expression?`
+
+Returns from a method or a lambda. The @ specifies the target from which it should return, per default it's in the scope it's in.
 
 ### Declarations
 
-#### (Im)mutables Variables & Fields
+#### Val & Var
+
+Syntax: `("val" | "var") IDENTIFIER (":" type)? ("=" expression)?`
+
+It's only allowed to omit the assignment if and only if there is a moment when it's directly assigned like in a constructor or in an initializer. If the type is omitted, the type will be inferred if there is no ambiguity. `val` marks the variable as not reassignable, has unfortunately nothing to do with mutability (we are not in Rust . _.).
 
 #### Constants
 
