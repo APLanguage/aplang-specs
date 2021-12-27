@@ -40,7 +40,7 @@ Is a package a namespace or not? So for example you can write in a file function
 
 #### Namespace Extentions
 
-There are many ways to extend the abilities of a Namespace: Extention Methods, Namespace declarations, Traits, inline classes and Inheritance.
+There are many ways to extend the abilities of a Namespace: Extention Methods, Namespace declarations, Traits, inline classes, `in path` in the class declaration and Inheritance.
 
 ##### Namespace declaration
 
@@ -66,9 +66,11 @@ This will make these classes available through the Shape class. The `.` means "s
 
 ##### Traits
 
-##### Inline Classes
+Traits are basically externally implemented interfaces. This is extremely useful when a class has many interfaces which must be implemented and you don't want to implement them all in one file. Although traits can be used to implement interfaces for external classes (details see below), however the usage of visibility is restricted where the interface is implemented and if it's inlined or not.
 
 ##### Extension methods
+
+Extension Methods are methods which are implemented on top of existing classes matching giving Generics or other at-compile known properties. Like traits, the visibility of members can be restricted, and extention methods cannot be overriden using inheritance.
 
 ### Expressions
 
@@ -91,7 +93,7 @@ therefor `val test = if(someBool) "return" else return` will work, and the type 
 
   The break stops the execution of the actual for/while/loop, if the loop is an expression and depending on the data type, this break can either return a single value out of the loop, stop the loop and append 1 additional last entry or just break it. Example:
 ```kotlin
-val statements: List<Statement> = while(scanner.peek() != '}') statement()
+val statements: List<Statement> = while(scanner.peek() != '}') yield statement()
 ```
 Because the type of `statements` is a collectible type (list, collection, sequence,flow, stream, array...), for each iteration, the return value of `statement()` will be collected into a List. If the type is `Statement?`, the while above will return ALWAYS null, if you want to have a value, it must be broken, example:
 ```kotlin
@@ -101,7 +103,7 @@ val friend: Friend? = for(friend in user.friends)
                         if(friend.name == name)
                           break friend
 ```
-If a friend was found, it will be broken and it returns the found friend. We can also notice, that the if has no else branch, this is due that this the for should return 1 value, which is provided only by breaks, therefore, the if is parsed and evaluated as a statement and not as an expression.
+If a friend was found, it will be broken and it returns the found friend. We can also notice, that the if has no else branch, this is due that this the for should return 1 value, which is provided only by breaks, therefore, there s no need for the if to explicitly return a value.
 
 Moreover there are a notion of "label", with `break@label [expr]` you can specify which loop to break. The specified expression is returened or added to collection, as if it where in the with the label specified loop. Example:
 
@@ -119,22 +121,27 @@ fn findFriendAndDoSomething(users: List<User>, name: String) {
 ```
 As the break is an expression, it will be accepted in places in which expression are expected, the expression returns in it self nothing, because the execution of the particular place will not occur (Ex.: `methodCall(break test)`), so the type checker will expect the inferred break type to match the loop and not the call place.
 
+#### yield
+
+  Syntax: `"yield"(+"@"+IDENTIFIER)? expression?`
+
+yield is a keyword used in loops to append/add, if the loop is used as an expression, a value to the stream of values.
+
 #### for-loop
   Syntax: `"for" "(" IDENTIFIER ( (":" | "as" | "as?") type )? "in" expression ")" expression`
 
+```
+for    → "for" "(" ( "(" for_id ("," for_id)* ")" | for_id ) ( "in" expression )+ ")" expression
+for_id → IDENTIFIER ( (":" | "as" | "as?") type )?
+```
+
   The for provides a way to iterate over an iterable.
-  `( (":" | "as" | "as?") type )?` allows to specify a type if it cannot be inferred, `as` and `as?` will cast the element, while the `as?` is a safe cast, `as` will raise an Exception if it cannot be cast.
-
-The for can return a value:
-
-- If the type needed is not a collectible, it will return T? which T (T? also possible) is the type provided in a break, otherwise it will return ALWAYS null.
-- If the type needed is a collectible, it will collect the return of the expression provided, if the collectible needs a not null, it will filter the values to be not null.
-- If the for is used as a statement, the `break` cannot accept any expression.
+  `( (":" | "as" | "as?") type )?` allows to specify a type if it cannot be inferred, `as` and `as?` will cast each element, while the `as?` is a safe cast, `as` will raise an Exception if it cannot be cast.
 
 #### while-loop
   Syntax: `"while" "(" expression ")" expression`
 
-The while loop provides a way to firstly loop with a condition, but also generating a collectible as long the loop still runs. It works exactly like the for, but instead of iterating, it tests the condition.
+It works exactly like the for, but instead of iterating, it tests the condition.
 
 #### loop
   Syntax: `"loop" expression`
@@ -157,25 +164,61 @@ It's only allowed to omit the assignment if and only if there is a moment when i
 
 #### Constants
 
+( Preview: const evaluations )
+
 ### Classes
 
 #### Normal Classes
 
+```
+class_constructor? (":" type invoc_cnstrctr? ("," type invoc_cnstrctr?)*)? ("{" declaration* "}")?
+cnstrctr_invoc → "(" expression ("," expression)* ")"
+visibility     → "pub" | "prv" | "pak" | "pro"
+generic        → "<" generic_dclr ("," generic_dclr)* ">"
+generic_dclr   → IDENTIFIER (":" | ">=" | "<=") type
+cnstrctr_param → ("var" | "val")? IDENTIFIER ":" type ("=" expression)?
+cnstrctr_class → "(" cnstrctr_param ("," cnstrctr_param) ")"
+```
+
+##### Declaration
+
+Syntax: `visibility? "open"? "inner"? "class" IDENTIFIER generic? ("in" path)?`
+
 #### Data Classes
+
+Syntax: `visibility? "open"? "inner"? "data" "class" IDENTIFIER generic? ("in" path)?`
 
 #### Wrapper Classes
 
+Syntax: `visibility? "wrapper" "for" type "as" IDENTIFIER ("in" path)? class_constructor? (":" type invoc_cnstrctr? ("," type invoc_cnstrctr?)*)? ("{" declaration* "}")?`
+
 #### Sealed Classes
+
+Syntax: `visibility? "open"? "inner"? "sealed" "class" IDENTIFIER generic? ("in" path)?`
+
+#### Inline Classes
+
+#### Enum Classes
+
+
 
 ### Methods
 
-#### Return Type overloading
+#### Syntax
 
-#### Currying
+#### Method Expression
 
-#### Lambdas
+#### Default Parameters
+
+#### Overloading
+
+##### Parameter Overloading
+
+##### Return Type Overloading
 
 ### Fields
+
+#### Properties
 
 ### OOP
 
@@ -187,5 +230,15 @@ It's only allowed to omit the assignment if and only if there is a moment when i
 
 ### Functional
 
+#### Lambdas
+
+#### Currying
+
 ### Meta programming
+
+### Miscellaneous
+
+#### Pattern Matching
+
+#### Deconstruction
 
