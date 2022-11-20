@@ -9,7 +9,7 @@ After some time, I finally started with writing down a [list of features (Projec
 
 What is the problem APLang tries to solve? If we look at the memmory management and see how the compile time is doing, we can clearly see that most of GC languages, even the main ones, does not have macros and such incorporated in the language, but rather use concepts like reflections or compiler plugins.
 I see APLang in the position where
-- it has many compile time features in the language built-in (like Rust for example),
+- it has many compile time features (macros, compile time code gen, etc.) in the language built-in (like Rust for example),
 - strong and staticly typed,
-- having many neat helping functions (ike Kotlin) and
+- having many neat helping functions (like Kotlin) and
 - working on a GC VM, where you dont have spend time with lifetimes or malloc/free.
