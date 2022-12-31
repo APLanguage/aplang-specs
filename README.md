@@ -11,5 +11,6 @@ What is the problem APLang tries to solve? If we look at the memmory management 
 I see APLang in the position where
 - it has many compile time features (macros, compile time code gen, etc.) in the language built-in (like Rust for example),
 - strong and staticly typed,
+- multi-platform focused per design,
 - having many neat helping functions (like Kotlin) and
 - working on a GC VM, where you dont have spend time with lifetimes or malloc/free.
