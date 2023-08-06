@@ -123,11 +123,6 @@ staticMethod2(10u16, "str")
 staticMethod2(a: 10u16, "str")
 staticMethod2(a: 10u16, b: "str")
 staticMethod2(b: "str", a: 10u16) // when fully named, it can be unordered
-
-fn staticMethod2(var a: u16, val b: str, /* syntax here for functions */) {}
-
-staticMethod2(a: 10u16, "str") { /* code, there is no implicit it */ }
-staticMethod2(a: 10u16, "str") { |arg1| -> /* code, functions with only 1 arg */ }
 ```
 
 #### Local Variables
@@ -155,27 +150,4 @@ single-module:
     ∣    ⨽ tests.aplang
     ⨽ bench
         ⨽ mybench.aplang
-
-multi-module:
-
-⨽ project-dir
-    ⊢ aplang.toml
-    ⊢ aplang.lock
-    ⊢ aplang.libraries (optional)
-    ⊢ sub-project1
-    ∣    ⊢ aplang.toml
-    ∣    ⊢ src
-    ∣    ∣    ⊢ main.aplang
-    ∣    ⊢ migration-scripts
-    ∣    ∣   ⨽ 001.sql 
-    ∣    ⨽ test
-    ∣        ⨽  tests.aplang
-    ⨽ sub-project2
-        ⊢ aplang.toml
-        ⊢ src
-        ∣    ⊢ main.aplang
-        ∣    ⨽ cat.png
-        ⨽ bench
-            ⨽ mybench.aplang
-
 ```
