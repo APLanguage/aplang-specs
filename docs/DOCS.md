@@ -23,42 +23,16 @@ Higher precision will be discussed in another entry, as implementing it would be
 
 All strings will be utf-8 encoded.
 
-There are different syntaxes of strings:
+There are different syntax of strings:
 ```kt
-"simple text with \n some newlines and \t tabs. No $interpolation however."
-
-val interpolation = ""
-f"A text with features of above and $interpolation support, allowing also $(1 + 1) expressions and ${
-  println("OwO")
-  "block expressions"
-} having also the possibility of \$escaping the interpolation"
-
 r"raw string, where \n and \t are taken literally, also no interpolation"
 
-fr"raw string with interpolation support, as above, the order of f and r does not matter"
-
 // all strings can be written as multiline, the newline is inserted and carriage return removed.
-
-// there are multiline strings for better readability, which removes common indentation
-// the string is trimmed, so no leading or trailing whitespace
-// if the first and last line are leaved blank
-// note: the f and r prefix still applies
-val test = """
-  test
-  there is no indentation for these ones
-"""
-
-val test2 = """
-query {
-  test
-  there is indentation for these 2 lines
-}
-"""
 ```
 ```rust
 // to allow quotes inside strings, you can prefix and suffix with an equal amount of #
 // note: the f and r prefix still applies, but they must be put before the #,
-// and """multiline strings""" also works
+// and """multiline strings""" will also work
 #"Hello, this is "a quoted string" "#
 ```
 
@@ -67,19 +41,19 @@ query {
 #### If
 
 Simple conditional:
-Can be used as a statement: `"if" "(" expression ")" statement ("else" statement)?` (could be overshadowed by "Everything as expression")
-Or as an expression: `"if" "(" expression ")" expression "else" expression`
+Can be used as a statement: `"if" "(" expression ")" statement ("else" statement)?` (could be overshadowed by "Everything as expression")\
+Or as an expression: `"if" "(" expression ")" expression "else" expression`\
 Ternary operator `cond ? expr : expr` is not planned, as it may give more confusion.
 
 #### While
 
-Looping until a condition is false.
-`"while" "(" expression:boolean ")" statement`
+Looping until a condition is false.\
+`"while" "(" expression:boolean ")" statement`\
 The while loop cannot be made as an expression as of now, as there is no trait system nor good inference to allow resolving the type when breaking the loop.
 
 ### Structs
 
-Classes are bundling data with behavior, an object-oriented view on things.
+Classes are bundling data with behavior, an object-oriented view on things.\
 This can cause some trouble when resolving and doesn't treat data like data.
 
 How is data stored and defined?
@@ -95,24 +69,26 @@ struct Test1 {
 struct Test2(a: u16, b: str)
 ```
 
-The difference between these two declarations is the ability to initialize structs like tuples. The second snippet allows `Test2` to be used for calls like `method(::Test)` where `method` accepts a Function with 2 arguments `(u16, str)` and returning a `Test2` instance.
+The difference between these two declarations is the ability to initialize structs like tuples.
+The second snippet allows `Test2` to be used for calls like `method(::Test)`
+where `method` accepts a Function with 2 arguments `(u16, str)` and returning a `Test2` instance.
 
 Initialization goes like this:
 ```kotlin
-Test1(a = 10u16, b = "str") // only named is allowed
-Test1(b = "str", a = 10u16) // unordered is also allowed, as it needs to be named anyway
+Test1(a: 10u16, b: "str") // only named is allowed
+Test1(b: "str", a: 10u16) // unordered is also allowed, as it needs to be named anyway
 
 Test2(10u16, "str")
-Test2(a = 10u16, "str")
-Test2(a = 10u16, b = "str")
-Test2(b = "str", a = 10u16)
+Test2(a: 10u16, "str")
+Test2(a: 10u16, b: "str")
+Test2(b: "str", a: 10u16)
 ```
 
 ### Arrays
 
 An array is an immutable List of the same type of values.
 
-The syntax of Arrays shall be `[Type]`, as generics are not there yet.
+The syntax of Arrays shall be `[Type]`, as generics are not there yet.\
 How length should be handled by the typing system is TBD as "const generics" aren't thought about it.
 
 ### Functions
@@ -130,9 +106,8 @@ fn staticMethod(
 
 `-> returntype` can be omitted when no return value is being returned.
 
-
-Parameters can be reassigned when defined with var. val is default and optional.
-Function overloading is not supported as of step 0.
+Parameters can be reassigned when defined with var. val is default and optional.\
+Function overloading is not supported as of step 0.\
 Return type overloading is discussed in another entry.
 
 #### Calling functions
