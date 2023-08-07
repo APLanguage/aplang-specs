@@ -120,9 +120,6 @@ staticMethod(10u16, "str", true)
 fn staticMethod2(var a: u16, val b: str) {}
 
 staticMethod2(10u16, "str")
-staticMethod2(a: 10u16, "str")
-staticMethod2(a: 10u16, b: "str")
-staticMethod2(b: "str", a: 10u16) // when fully named, it can be unordered
 ```
 
 #### Local Variables
