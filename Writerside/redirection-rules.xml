@@ -6,8 +6,4 @@
         <accepts>page.html</accepts>
     </rule>
     -->
-    <rule id="1ede835a">
-        <description>Created after removal of "Empty MD Topic" from APLanguage</description>
-        <accepts>Empty-MD-Topic.html</accepts>
-    </rule>
 </rules>
